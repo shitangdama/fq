@@ -92,6 +92,7 @@ func consumeQueue(t *testing.T, fq *fqscheduler, descs []flowDesc) (float64, err
 		if cnt[it.key] == descs[it.key].ftotal {
 			delete(active, it.key)
 		}
+
 	}
 
 	var variance float64
@@ -103,6 +104,9 @@ func consumeQueue(t *testing.T, fq *fqscheduler, descs []flowDesc) (float64, err
 		descs[key].idealPercent = (((float64(total) * float64(0+1)) / float64(wsum)) / float64(total)) * 100
 		descs[key].actualPercent = (float64(acnt[key]) / float64(total)) * 100
 		x := descs[key].idealPercent - descs[key].actualPercent
+		fmt.Println(descs[key].actualPercent)
+		fmt.Println(descs[key].idealPercent)
+		fmt.Println("----------")
 		x *= x
 		variance += x
 	}
@@ -113,7 +117,7 @@ func consumeQueue(t *testing.T, fq *fqscheduler, descs []flowDesc) (float64, err
 
 func TestSingleFlow(t *testing.T) {
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	queues := initQueues(1, 1)
+	queues := InitQueues(1, 1)
 	fq := newfqscheduler(queues)
 
 	go func() {
@@ -141,7 +145,7 @@ func TestSingleFlow(t *testing.T) {
 
 func TestUniformMultiFlow(t *testing.T) {
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	queues := initQueues(1000, 0)
+	queues := InitQueues(1000, 0)
 	fq := newfqscheduler(queues)
 
 	var swg sync.WaitGroup
@@ -187,7 +191,7 @@ func TestUniformMultiFlow(t *testing.T) {
 
 func TestUniformMultiFlowWithRandomServiceTime(t *testing.T) {
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	queues := initQueues(1000, 0)
+	queues := InitQueues(1000, 0)
 	fq := newfqscheduler(queues)
 
 	var swg sync.WaitGroup

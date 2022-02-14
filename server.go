@@ -1,6 +1,7 @@
-package fq
+package main
 
 import (
+	"demo/fq"
 	"log"
 	"math/rand"
 	"net/http"
@@ -23,11 +24,11 @@ func main() {
 }
 
 func FQServer(actualHandler http.HandlerFunc) {
-	http.HandleFunc("/", newHandler(initQueues(100, 1), actualHandler))
+	http.HandleFunc("/", newHandler(fq.InitQueues(100, 1), actualHandler))
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func newHandler(allQueues []*Queue, delegateHandler http.HandlerFunc) http.HandlerFunc {
+func newHandler(allQueues []*fq.Queue, delegateHandler http.HandlerFunc) http.HandlerFunc {
 	if len(allQueues) == 0 {
 		return delegateHandler
 	}
